@@ -1,10 +1,13 @@
 #version 430
 
-layout(location = 0) in vec4 position;
-//out vec2 fragPos;
+in vec4 vertexPos;
+in vec3 vertexColor;
 
+layout(location = 1) in vec3 vertColor;
+out vec3 fragColor;
 
 void main()
 {
-	gl_Position = position;
+	gl_Position = vertexPos;
+	fragColor = vertColor;
 }
