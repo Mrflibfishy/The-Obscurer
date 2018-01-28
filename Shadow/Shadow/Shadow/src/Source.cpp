@@ -3,28 +3,9 @@
 #include <GLFW/glfw3.h>
 #include <string.h>
 #include <fstream>
-
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCall(x) GLClearError();\
-	x;\
-	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-
-void log(const char* text)  {
-	std::cout << text << std::endl;
-}
-
-static void GLClearError() {
-	while (glGetError());
-}
-
-static bool GLLogCall(const char* function, const char* file, int line) {
-	while (GLenum error = glGetError()) {
-		std::cout << "Opengl Error: " << error << ", " << function << " " << file << ": " << line << std::endl;
-		return false;
-	}
-	return true;
-}
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 std::string readShaderCode(const char* fileName) {
 	std::ifstream meinput(fileName);
@@ -38,10 +19,6 @@ std::string readShaderCode(const char* fileName) {
 }
 
 
-GLenum logerrors(GLenum text) {
-	std::cout << text << std::endl;
-	return text;
-}
 
 bool checkStatus(GLuint objectID, PFNGLGETSHADERIVPROC objectPropertyGetterFunc,
 	PFNGLGETSHADERINFOLOGPROC getInfoLogFunc, GLenum statusType) {
@@ -118,15 +95,10 @@ int main(void)
 		GLCall(glGenVertexArrays(1, &vao));
 		GLCall(glBindVertexArray(vao));
 
-		GLuint vertex_buffer; // Save this for later rendering
-		GLCall(glGenBuffers(1, &vertex_buffer));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer));
-		GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 5 * 4, vertexData, GL_STATIC_DRAW));
+		VertexBuffer vb(vertexData, sizeof(float) * 5 * 4);
 
-		GLuint indexBuffer; // Save this for later rendering
-		GLCall(glGenBuffers(1, &indexBuffer));
-		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer))
-		GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, indexData, GL_STATIC_DRAW));
+		
+		IndexBuffer ib(indexData, 6);
 
 
 		GLCall(glEnableVertexAttribArray(0));
