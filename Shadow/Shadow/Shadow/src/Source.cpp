@@ -6,41 +6,8 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "shader.h"
 
-std::string readShaderCode(const char* fileName) {
-	std::ifstream meinput(fileName);
-	if (!meinput.good()) {
-		std::cout << "File failed to load..." << fileName;
-		ASSERT(0);
-	}
-	return std::string(
-		std::istreambuf_iterator<char>(meinput),
-		std::istreambuf_iterator<char>());
-}
-
-
-
-bool checkStatus(GLuint objectID, PFNGLGETSHADERIVPROC objectPropertyGetterFunc,
-	PFNGLGETSHADERINFOLOGPROC getInfoLogFunc, GLenum statusType) {
-	GLint  status;
-	objectPropertyGetterFunc(objectID, statusType, &status);
-	if (status != GL_TRUE) {
-		GLint infoLogLength;
-		objectPropertyGetterFunc(objectID, GL_INFO_LOG_LENGTH, &infoLogLength);
-		GLchar* buffer = new GLchar[infoLogLength];
-
-		GLsizei bufferSize;
-		getInfoLogFunc(objectID, infoLogLength, &bufferSize, buffer);
-		std::cout << buffer << std::endl;
-		delete[] buffer;
-		return false;
-	}
-	return true;
-}
-
-bool checkShaderStatus(GLuint shaderID) {
-	return checkStatus(shaderID, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
-}
 
 int main(void)
 {
@@ -99,40 +66,14 @@ int main(void)
 	GLCall(glEnableVertexAttribArray(1));
 	GLCall(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 2)));
 
+	Shader shader("res/vertexShader.glsl", "res/fragmentShader.glsl");
+	shader.Bind();
+	shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
-	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	glBindAttribLocation(shader.getID(), 0, std::string("vertexPos").c_str());
+	glBindAttribLocation(shader.getID(), 1, std::string("vertexColor").c_str());
 
-	const char* adapter[1];
-	std::string temp = readShaderCode("res/vertexShader.glsl");
-	adapter[0] = temp.c_str();
-	GLCall(glShaderSource(vertexShaderID, 1, adapter, 0));
-
-	temp = readShaderCode("res/fragmentShader.glsl");
-	adapter[0] = temp.c_str();
-	GLCall(glShaderSource(fragmentShaderID, 1, adapter, 0));
-
-	GLCall(glCompileShader(vertexShaderID));
-	GLCall(glCompileShader(fragmentShaderID));
-
-
-	if (!checkShaderStatus(vertexShaderID) || !checkShaderStatus(fragmentShaderID)) {
-		ASSERT(0);
-	}
-
-
-	GLuint programID = glCreateProgram();
-
-
-	glBindAttribLocation(programID, 0, std::string("vertexPos").c_str());
-	glBindAttribLocation(programID, 1, std::string("vertexColor").c_str());
-
-	GLCall(glActiveTexture(GL_TEXTURE0));
-	GLCall(glAttachShader(programID, vertexShaderID));
-	GLCall(glAttachShader(programID, fragmentShaderID));
-	GLCall(glLinkProgram(programID));
-
-	GLCall(glUseProgram(programID));
+	//GLCall(glActiveTexture(GL_TEXTURE0));
 
 
 
