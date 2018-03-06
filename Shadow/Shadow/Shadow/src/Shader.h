@@ -2,6 +2,7 @@
 #include <gl\glew.h>
 #include "Renderer.h"
 #include <string>
+#include <unordered_map>
 
 struct shaderProgramSource {
 	const char* VertexSource;
@@ -18,6 +19,7 @@ class Shader
 private:
 	shaderProgramSource m_FilePath;
 	unsigned int  m_RendererID;
+	std::unordered_map<std::string, int> m_UniformLocationCache;
 public:
 	Shader(const char* filepathVS, const char* filepathFS);
 	~Shader();
