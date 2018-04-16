@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include <fstream>
 #include <iostream>
-
+#include "Renderer.h"
 
 
 Shader::Shader(const char* filepathVS, const char* filepathFS)

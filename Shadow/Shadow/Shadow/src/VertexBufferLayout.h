@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include "Renderer.h"
 
+
 struct VetexBufferElement{
 	unsigned int type;
 	unsigned int count;

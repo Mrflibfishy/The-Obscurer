@@ -1,7 +1,10 @@
 ﻿  Source.cpp
+  Renderer.cpp
   Generating Code...
   Skipping... (no relevant changes detected)
+  VertexBuffer.cpp
   VertexArray.cpp
   Shadder.cpp
+  IndexBuffer.cpp
   Shadow.vcxproj -> C:\Users\Brendan\Documents\GitHub\The-Obscurer\Shadow\Shadow\Debug\Shadow.exe
   Shadow.vcxproj -> C:\Users\Brendan\Documents\GitHub\The-Obscurer\Shadow\Shadow\Debug\Shadow.pdb (Partial PDB)

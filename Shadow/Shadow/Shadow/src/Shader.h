@@ -1,6 +1,6 @@
 #pragma once
 #include <gl\glew.h>
-#include "Renderer.h"
+//
 #include <string>
 #include <unordered_map>
 

@@ -8,6 +8,7 @@
 #include "IndexBuffer.h"
 #include "shader.h"
 #include "VertexArray.h"
+#include "VertexBufferLayout.h"
 
 
 int main(void)
@@ -68,18 +69,17 @@ int main(void)
 	vb.unBind();
 	ib.unBind();
 
+	Renderer renderer;
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
-		GLCall(glClear(GL_COLOR_BUFFER_BIT));
+		renderer.Clear();
+
 		shader.Bind();
-		//va.Bind();
-		ib.Bind();
 
-		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-
+		renderer.Draw(va, ib, shader);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
