@@ -7,6 +7,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "shader.h"
+#include "VertexArray.h"
 
 
 int main(void)
@@ -50,32 +51,22 @@ int main(void)
 		2,3,0
 	};
 
-	unsigned int vao;
-	GLCall(glGenVertexArrays(1, &vao));
-	GLCall(glBindVertexArray(vao));
-
-
+	VertexArray va;
 	VertexBuffer vb(vertexData, sizeof(float) * 5 * 4);
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(3);
+	va.AddBuffer(vb, layout);
 	IndexBuffer ib(indexData, 6);
 
 
-	GLCall(glEnableVertexAttribArray(0));
-	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0));
 
-
-	GLCall(glEnableVertexAttribArray(1));
-	GLCall(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 2)));
 
 	Shader shader("res/vertexShader.glsl", "res/fragmentShader.glsl");
-	shader.Bind();
-	shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
-	glBindAttribLocation(shader.getID(), 0, std::string("vertexPos").c_str());
-	glBindAttribLocation(shader.getID(), 1, std::string("vertexColor").c_str());
-
-	//GLCall(glActiveTexture(GL_TEXTURE0));
-
-
+	va.unBind();
+	vb.unBind();
+	ib.unBind();
 
 
 	/* Loop until the user closes the window */
@@ -83,12 +74,11 @@ int main(void)
 	{
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-		
+		shader.Bind();
+		//va.Bind();
+		ib.Bind();
 
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-
-		
 
 
 		/* Swap front and back buffers */

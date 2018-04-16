@@ -12,8 +12,8 @@ class VertexBuffer {
 
 		void addData(const void* data, unsigned int size);
 
-		void bind() const;
-		void unbind() const;
+		void Bind() const;
+		void unBind() const;
 
 		
 };

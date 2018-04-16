@@ -14,10 +14,10 @@ void VertexBuffer::addData(const void* data, unsigned int size) {
 	amountData += size;
 }
 
-void VertexBuffer::bind() const {
+void VertexBuffer::Bind() const {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, id));
 }
 
-void VertexBuffer::unbind() const {
+void VertexBuffer::unBind() const {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
